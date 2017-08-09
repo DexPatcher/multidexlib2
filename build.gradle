@@ -44,7 +44,7 @@ compileJava {
     options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
 }
 
-Manifest sharedManifest = manifest {
+def sharedManifest = manifest {
     attributes(
             'Implementation-Title': 'multidexlib2',
             'Implementation-Version': version
