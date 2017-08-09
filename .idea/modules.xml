@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dexpatcher-multidexlib2.iml" filepath="$PROJECT_DIR$/.idea/modules/dexpatcher-multidexlib2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dexpatcher-multidexlib2_main.iml" filepath="$PROJECT_DIR$/.idea/modules/dexpatcher-multidexlib2_main.iml" group="multidexlib2" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dexpatcher-multidexlib2_test.iml" filepath="$PROJECT_DIR$/.idea/modules/dexpatcher-multidexlib2_test.iml" group="multidexlib2" />
+    </modules>
+  </component>
+</project>
