@@ -14,7 +14,7 @@ plugins {
     id 'maven'
 }
 
-def dexlib2Version = '2.2.0'
+def dexlib2Version = '2.2.1'
 def multidexlib2VersionSuffix = ''
 
 group = 'com.github.lanchon.dexpatcher'
