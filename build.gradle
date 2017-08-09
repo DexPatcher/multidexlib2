@@ -40,10 +40,6 @@ dependencies {
     //compile 'com.google.guava:guava:18.0'
 }
 
-compileJava {
-    options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
-}
-
 def sharedManifest = manifest {
     attributes(
             'Implementation-Title': 'multidexlib2',
