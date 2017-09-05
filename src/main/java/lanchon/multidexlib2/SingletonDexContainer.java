@@ -21,6 +21,10 @@ public class SingletonDexContainer extends AbstractMultiDexContainer<MultiDexFil
 
 	// I insist that some dex container entries do not have names
 	// even though dexlib2 does not allow null entry names.
+	// If this constant is ever changed to hold a non-null value,
+	// the new value will be a unique instance of String that will
+	// act as a sentinel. Clients should always test for this value
+	// using the '==' operator rather than the 'equals(...)' method.
 	public static final String UNDEFINED_ENTRY_NAME = null;
 
 	public SingletonDexContainer(DexFile dexFile) {
