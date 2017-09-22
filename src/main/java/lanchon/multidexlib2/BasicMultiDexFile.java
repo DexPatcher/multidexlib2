@@ -18,7 +18,7 @@ import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.MultiDexContainer;
 import org.jf.dexlib2.iface.MultiDexContainer.MultiDexFile;
 
-public class BasicMultiDexFile<T extends MultiDexContainer<? extends MultiDexFile>> implements MultiDexFile {
+public class BasicMultiDexFile<T extends MultiDexContainer<? extends MultiDexFile>> implements WrappingMultiDexFile {
 
 	private final T container;
 	private final String entryName;
@@ -48,6 +48,11 @@ public class BasicMultiDexFile<T extends MultiDexContainer<? extends MultiDexFil
 	@Override
 	public T getContainer() {
 		return container;
+	}
+
+	@Override
+	public DexFile getWrappedDexFile() {
+		return dexFile;
 	}
 
 }

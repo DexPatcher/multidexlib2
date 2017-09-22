@@ -17,19 +17,18 @@ import java.util.TreeMap;
 
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.iface.MultiDexContainer.MultiDexFile;
 
-public class DirectoryDexContainer extends AbstractMultiDexContainer<MultiDexFile> {
+public class DirectoryDexContainer extends AbstractMultiDexContainer<WrappingMultiDexFile> {
 
 	public DirectoryDexContainer(File directory, DexFileNamer namer, Opcodes opcodes) throws IOException {
-		Map<String, MultiDexFile> entryMap = new TreeMap<>(new DexFileNameComparator(namer));
+		Map<String, WrappingMultiDexFile> entryMap = new TreeMap<>(new DexFileNameComparator(namer));
 		String[] names = directory.list();
 		if (names == null) throw new IOException("Cannot access directory: " + directory);
 		for (String entryName : names) {
 			File file = new File(directory, entryName);
 			if (file.isFile() && namer.isValidName(entryName)) {
 				DexFile dexFile = RawDexIO.readRawDexFile(file, opcodes);
-				MultiDexFile multiDexFile = new BasicMultiDexFile<>(this, entryName, dexFile);
+				WrappingMultiDexFile multiDexFile = new BasicMultiDexFile<>(this, entryName, dexFile);
 				if (entryMap.put(entryName, multiDexFile) != null) throwDuplicateEntryName(entryName);
 			}
 		}

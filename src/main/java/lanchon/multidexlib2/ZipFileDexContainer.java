@@ -21,9 +21,8 @@ import java.util.zip.ZipFile;
 
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.iface.MultiDexContainer.MultiDexFile;
 
-public class ZipFileDexContainer extends AbstractMultiDexContainer<MultiDexFile> {
+public class ZipFileDexContainer extends AbstractMultiDexContainer<WrappingMultiDexFile> {
 
 	public static boolean isZipFile(File zip) {
 		if (!zip.isFile()) return false;
@@ -37,7 +36,7 @@ public class ZipFileDexContainer extends AbstractMultiDexContainer<MultiDexFile>
 	}
 
 	public ZipFileDexContainer(File zip, DexFileNamer namer, Opcodes opcodes) throws IOException {
-		Map<String, MultiDexFile> entryMap = new TreeMap<>(new DexFileNameComparator(namer));
+		Map<String, WrappingMultiDexFile> entryMap = new TreeMap<>(new DexFileNameComparator(namer));
 		ZipFile zipFile = new ZipFile(zip);
 		try {
 			Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
@@ -52,7 +51,7 @@ public class ZipFileDexContainer extends AbstractMultiDexContainer<MultiDexFile>
 					} finally {
 						inputStream.close();
 					}
-					MultiDexFile multiDexFile = new BasicMultiDexFile<>(this, entryName, dexFile);
+					WrappingMultiDexFile multiDexFile = new BasicMultiDexFile<>(this, entryName, dexFile);
 					if (entryMap.put(entryName, multiDexFile) != null) throwDuplicateEntryName(entryName);
 				}
 			}
