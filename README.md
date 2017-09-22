@@ -1,6 +1,8 @@
 # multidexlib2
 ### Multi-dex extensions for dexlib2.
 
+[![Build Status](https://travis-ci.org/DexPatcher/multidexlib2.svg?branch=master)](https://travis-ci.org/DexPatcher/multidexlib2)
+
 This is a free software (GPLv3+) library on top of [dexlib2](https://github.com/JesusFreke/smali/tree/master/dexlib2) that features:
 - Multi-dex reading and writing.
 - Optional management of the content of the main dex file when writing multi-dex.
