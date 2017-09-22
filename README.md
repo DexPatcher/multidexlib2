@@ -1,6 +1,7 @@
 # multidexlib2
 ### Multi-dex extensions for dexlib2.
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.lanchon.dexpatcher/multidexlib2/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.lanchon.dexpatcher/multidexlib2)
 [![Build Status](https://travis-ci.org/DexPatcher/multidexlib2.svg?branch=master)](https://travis-ci.org/DexPatcher/multidexlib2)
 
 This is a free software (GPLv3+) library on top of [dexlib2](https://github.com/JesusFreke/smali/tree/master/dexlib2) that features:
