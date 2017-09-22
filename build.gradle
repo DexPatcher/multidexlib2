@@ -68,48 +68,52 @@ artifacts {
     archives javadocJar
 }
 
-signing {
-    sign configurations.archives
-}
+if (project.hasProperty('ossrhUsername')) {
 
-uploadArchives {
-    repositories.mavenDeployer {
-        pom.project {
-            name 'multidexlib2'
-            description 'Multi-dex extensions for dexlib2.'
-            url 'https://github.com/DexPatcher/multidexlib2'
+    signing {
+        sign configurations.archives
+    }
 
-            scm {
-                connection 'scm:git:git://github.com/DexPatcher/multidexlib2.git'
-                developerConnection 'scm:git:ssh://github.com:DexPatcher/multidexlib2.git'
-                url 'https://github.com/DexPatcher/multidexlib2/tree/master'
-            }
+    uploadArchives {
+        repositories.mavenDeployer {
+            pom.project {
+                name 'multidexlib2'
+                description 'Multi-dex extensions for dexlib2.'
+                url 'https://github.com/DexPatcher/multidexlib2'
 
-            licenses {
-                license {
-                    name 'GNU General Public License (version 3 or later)'
-                    url 'https://www.gnu.org/licenses/gpl.txt'
+                scm {
+                    connection 'scm:git:git://github.com/DexPatcher/multidexlib2.git'
+                    developerConnection 'scm:git:ssh://github.com:DexPatcher/multidexlib2.git'
+                    url 'https://github.com/DexPatcher/multidexlib2/tree/master'
+                }
+
+                licenses {
+                    license {
+                        name 'GNU General Public License (version 3 or later)'
+                        url 'https://www.gnu.org/licenses/gpl.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        name 'Lanchon'
+                        url 'https://github.com/Lanchon'
+                    }
                 }
             }
 
-            developers {
-                developer {
-                    name 'Lanchon'
-                    url 'https://github.com/Lanchon'
-                }
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication userName: ossrhUsername, password: ossrhPassword
             }
-        }
 
-        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-            authentication userName: ossrhUsername, password: ossrhPassword
-        }
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication userName: ossrhUsername, password: ossrhPassword
+            }
 
-        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-            authentication userName: ossrhUsername, password: ossrhPassword
-        }
-
-        beforeDeployment {
-            signing.signPom(it)
+            beforeDeployment {
+                signing.signPom(it)
+            }
         }
     }
+
 }
