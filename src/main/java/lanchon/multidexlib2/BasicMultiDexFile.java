@@ -50,4 +50,8 @@ public class BasicMultiDexFile<T extends MultiDexContainer<? extends MultiDexFil
 		return container;
 	}
 
+	public DexFile getUnderlyingDexFile() {
+		return dexFile;
+	}
+
 }
