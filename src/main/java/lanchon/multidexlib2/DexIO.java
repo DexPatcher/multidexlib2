@@ -128,26 +128,11 @@ public class DexIO {
 			int fileClassCount = 0;
 			while (currentClass != null) {
 				if (minimalMainDex && fileClassCount >= minMainDexClassCount) break;
-				dexPool.mark();
-				dexPool.internClass(currentClass);
-				fileClassCount++;
-				boolean overflow =
-						dexPool.typeSection.getItemCount() > maxDexPoolSize ||
-						//dexPool.protoSection.getItemCount() > maxDexPoolSize ||
-						dexPool.fieldSection.getItemCount() > maxDexPoolSize ||
-						dexPool.methodSection.getItemCount() > maxDexPoolSize ||
-						//dexPool.classSection.getItemCount() > maxDexPoolSize ||
-						false;
-				if (overflow) {
-					if (fileClassCount <= minMainDexClassCount) throw new DexPoolOverflowException(
-							"Dex pool overflowed while writing type " + fileClassCount +
-							" of " + minMainDexClassCount);
-					if (fileClassCount == 1) throw new DexPoolOverflowException(
-							"Type too big for dex pool: " + currentClass.getType());
-					dexPool.reset();
-					fileClassCount--;
+				if (!internClass(dexPool, currentClass, maxDexPoolSize)) {
+					checkDexPoolOverflow(currentClass, fileClassCount, minMainDexClassCount);
 					break;
 				}
+				fileClassCount++;
 				currentClass = getQueueItem(queue, classIterator, lock);
 			}
 			synchronized (lock) {
@@ -163,6 +148,30 @@ public class DexIO {
 			minMainDexClassCount = 0;
 			minimalMainDex = false;
 		} while (currentClass != null);
+	}
+
+	private static boolean internClass(DexPool dexPool, ClassDef classDef, int maxDexPoolSize) {
+		dexPool.mark();
+		dexPool.internClass(classDef);
+		if (
+				dexPool.typeSection.getItemCount() > maxDexPoolSize ||
+				//dexPool.protoSection.getItemCount() > maxDexPoolSize ||
+				dexPool.fieldSection.getItemCount() > maxDexPoolSize ||
+				dexPool.methodSection.getItemCount() > maxDexPoolSize ||
+				//dexPool.classSection.getItemCount() > maxDexPoolSize ||
+				false
+		) {
+			dexPool.reset();    // roll back interning on pool overflow
+			return false;
+		}
+		return true;
+	}
+
+	private static void checkDexPoolOverflow(ClassDef classDef, int classCount, int minClassCount) {
+		if (classCount < minClassCount) throw new DexPoolOverflowException(
+				"Dex pool overflowed while writing type " + (classCount + 1) + " of " + minClassCount);
+		if (classCount == 0) throw new DexPoolOverflowException(
+				"Type too big for dex pool: " + classDef.getType());
 	}
 
 	private static <T> T getQueueItem(Queue<T> queue, Iterator<? extends T> iterator, Object lock) {
