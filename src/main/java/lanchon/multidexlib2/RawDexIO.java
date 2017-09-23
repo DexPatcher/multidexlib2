@@ -38,11 +38,8 @@ public class RawDexIO {
 
 	public static DexBackedDexFile readRawDexFile(File file, Opcodes opcodes) throws IOException {
 		/*
-		InputStream inputStream = new FileInputStream(file);
-		try {
+		try (InputStream inputStream = new FileInputStream(file)) {
 			return readRawDexFile(inputStream, file.length(), opcodes);
-		} finally {
-			inputStream.close();
 		}
 		*/
 		byte[] buf = Files.toByteArray(file);

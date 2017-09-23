@@ -37,27 +37,21 @@ public class ZipFileDexContainer extends AbstractMultiDexContainer<WrappingMulti
 
 	public ZipFileDexContainer(File zip, DexFileNamer namer, Opcodes opcodes) throws IOException {
 		Map<String, WrappingMultiDexFile<DexBackedDexFile>> entryMap = new TreeMap<>(new DexFileNameComparator(namer));
-		ZipFile zipFile = new ZipFile(zip);
-		try {
+		try (ZipFile zipFile = new ZipFile(zip)) {
 			Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
 			while (zipEntries.hasMoreElements()) {
 				ZipEntry zipEntry = zipEntries.nextElement();
 				String entryName = zipEntry.getName();
 				if (namer.isValidName(entryName)) {
 					DexBackedDexFile dexFile;
-					InputStream inputStream = zipFile.getInputStream(zipEntry);
-					try {
+					try (InputStream inputStream = zipFile.getInputStream(zipEntry)) {
 						dexFile = RawDexIO.readRawDexFile(inputStream, zipEntry.getSize(), opcodes);
-					} finally {
-						inputStream.close();
 					}
 					WrappingMultiDexFile<DexBackedDexFile> multiDexFile =
 							new BasicMultiDexFile<>(this, entryName, dexFile);
 					if (entryMap.put(entryName, multiDexFile) != null) throwDuplicateEntryName(entryName);
 				}
 			}
-		} finally {
-			zipFile.close();
 		}
 		initialize(entryMap, opcodes);
 	}
