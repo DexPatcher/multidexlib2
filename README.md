@@ -16,6 +16,7 @@ This is a free software (GPLv3+) library on top of [dexlib2](https://github.com/
 
 Limitations:
 - Only supports dex files. (Does not support odex/oat files.)
+- Only writes dex files to directories. (Does not write into zip files.)
 
 ### DISTRIBUTION
 
