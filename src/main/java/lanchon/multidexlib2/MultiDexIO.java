@@ -58,7 +58,7 @@ public class MultiDexIO {
 		if (file.isDirectory()) return new DirectoryDexContainer(file, namer, opcodes);
 		if (!file.isFile()) throw new FileNotFoundException(file.toString());
 		if (ZipFileDexContainer.isZipFile(file)) return new ZipFileDexContainer(file, namer, opcodes);
-		return new SingletonDexContainer(RawDexIO.readRawDexFile(file, opcodes));
+		return new SingletonDexContainer<>(RawDexIO.readRawDexFile(file, opcodes));
 	}
 
 	// Write

@@ -20,9 +20,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.jf.dexlib2.Opcodes;
-import org.jf.dexlib2.iface.DexFile;
+import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 
-public class ZipFileDexContainer extends AbstractMultiDexContainer<WrappingMultiDexFile> {
+public class ZipFileDexContainer extends AbstractMultiDexContainer<WrappingMultiDexFile<DexBackedDexFile>> {
 
 	public static boolean isZipFile(File zip) {
 		if (!zip.isFile()) return false;
@@ -36,7 +36,7 @@ public class ZipFileDexContainer extends AbstractMultiDexContainer<WrappingMulti
 	}
 
 	public ZipFileDexContainer(File zip, DexFileNamer namer, Opcodes opcodes) throws IOException {
-		Map<String, WrappingMultiDexFile> entryMap = new TreeMap<>(new DexFileNameComparator(namer));
+		Map<String, WrappingMultiDexFile<DexBackedDexFile>> entryMap = new TreeMap<>(new DexFileNameComparator(namer));
 		ZipFile zipFile = new ZipFile(zip);
 		try {
 			Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
@@ -44,14 +44,15 @@ public class ZipFileDexContainer extends AbstractMultiDexContainer<WrappingMulti
 				ZipEntry zipEntry = zipEntries.nextElement();
 				String entryName = zipEntry.getName();
 				if (namer.isValidName(entryName)) {
-					DexFile dexFile;
+					DexBackedDexFile dexFile;
 					InputStream inputStream = zipFile.getInputStream(zipEntry);
 					try {
 						dexFile = RawDexIO.readRawDexFile(inputStream, zipEntry.getSize(), opcodes);
 					} finally {
 						inputStream.close();
 					}
-					WrappingMultiDexFile multiDexFile = new BasicMultiDexFile<>(this, entryName, dexFile);
+					WrappingMultiDexFile<DexBackedDexFile> multiDexFile =
+							new BasicMultiDexFile<>(this, entryName, dexFile);
 					if (entryMap.put(entryName, multiDexFile) != null) throwDuplicateEntryName(entryName);
 				}
 			}

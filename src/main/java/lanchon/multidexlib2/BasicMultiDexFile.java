@@ -18,13 +18,14 @@ import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.MultiDexContainer;
 import org.jf.dexlib2.iface.MultiDexContainer.MultiDexFile;
 
-public class BasicMultiDexFile<T extends MultiDexContainer<? extends MultiDexFile>> implements WrappingMultiDexFile {
+public class BasicMultiDexFile<C extends MultiDexContainer<? extends MultiDexFile>, D extends DexFile>
+		implements WrappingMultiDexFile<D> {
 
-	private final T container;
+	private final C container;
 	private final String entryName;
-	private final DexFile dexFile;
+	private final D dexFile;
 
-	public BasicMultiDexFile(T container, String entryName, DexFile dexFile) {
+	public BasicMultiDexFile(C container, String entryName, D dexFile) {
 		this.container = container;
 		this.entryName = entryName;
 		this.dexFile = dexFile;
@@ -46,12 +47,12 @@ public class BasicMultiDexFile<T extends MultiDexContainer<? extends MultiDexFil
 	}
 
 	@Override
-	public T getContainer() {
+	public C getContainer() {
 		return container;
 	}
 
 	@Override
-	public DexFile getWrappedDexFile() {
+	public D getWrappedDexFile() {
 		return dexFile;
 	}
 
