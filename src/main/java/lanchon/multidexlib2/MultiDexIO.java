@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.jf.dexlib2.Opcodes;
+import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.MultiDexContainer;
 
@@ -29,22 +30,25 @@ public class MultiDexIO {
 
 	public static DexFile readDexFile(boolean multiDex, File file, DexFileNamer namer, Opcodes opcodes,
 			DexIO.Logger logger) throws IOException {
-		MultiDexContainer<? extends DexFile> container = readMultiDexContainer(multiDex, file, namer, opcodes, logger);
+		MultiDexContainer<WrappingMultiDexFile<DexBackedDexFile>> container =
+				readMultiDexContainer(multiDex, file, namer, opcodes, logger);
 		return new MultiDexContainerBackedDexFile<>(container);
 	}
 
-	public static MultiDexContainer<? extends DexFile> readMultiDexContainer(boolean multiDex, File file,
-			DexFileNamer namer, Opcodes opcodes, DexIO.Logger logger) throws IOException {
-		MultiDexContainer<? extends DexFile> container = readMultiDexContainer(file, namer, opcodes, logger);
+	public static MultiDexContainer<WrappingMultiDexFile<DexBackedDexFile>> readMultiDexContainer(boolean multiDex,
+			File file, DexFileNamer namer, Opcodes opcodes, DexIO.Logger logger) throws IOException {
+		MultiDexContainer<WrappingMultiDexFile<DexBackedDexFile>> container =
+				readMultiDexContainer(file, namer, opcodes, logger);
 		int entries = container.getDexEntryNames().size();
 		if (entries == 0) throw new EmptyMultiDexContainerException(file.toString());
 		if (!multiDex && entries > 1) throw new MultiDexDetectedException(file.toString());
 		return container;
 	}
 
-	public static MultiDexContainer<? extends DexFile> readMultiDexContainer(File file, DexFileNamer namer,
-			Opcodes opcodes, DexIO.Logger logger) throws IOException {
-		MultiDexContainer<? extends DexFile> container = readMultiDexContainer(file, namer, opcodes);
+	public static MultiDexContainer<WrappingMultiDexFile<DexBackedDexFile>> readMultiDexContainer(File file,
+			DexFileNamer namer, Opcodes opcodes, DexIO.Logger logger) throws IOException {
+		MultiDexContainer<WrappingMultiDexFile<DexBackedDexFile>> container =
+				readMultiDexContainer(file, namer, opcodes);
 		if (logger != null) {
 			for (String name : container.getDexEntryNames()) {
 				logger.log(file, name, container.getEntry(name).getClasses().size());
@@ -53,8 +57,8 @@ public class MultiDexIO {
 		return container;
 	}
 
-	public static MultiDexContainer<? extends DexFile> readMultiDexContainer(File file, DexFileNamer namer,
-			Opcodes opcodes) throws IOException {
+	public static MultiDexContainer<WrappingMultiDexFile<DexBackedDexFile>> readMultiDexContainer(File file,
+			DexFileNamer namer, Opcodes opcodes) throws IOException {
 		if (file.isDirectory()) return new DirectoryDexContainer(file, namer, opcodes);
 		if (!file.isFile()) throw new FileNotFoundException(file.toString());
 		if (ZipFileDexContainer.isZipFile(file)) return new ZipFileDexContainer(file, namer, opcodes);
