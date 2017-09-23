@@ -140,7 +140,7 @@ public class DexIO {
 						false;
 				if (overflow) {
 					if (fileClassCount <= minMainDexClassCount) throw new DexPoolOverflowException(
-							"Dex pool overflowed while writing type " + (fileClassCount) +
+							"Dex pool overflowed while writing type " + fileClassCount +
 							" of " + minMainDexClassCount);
 					if (fileClassCount == 1) throw new DexPoolOverflowException(
 							"Type too big for dex pool: " + currentClass.getType());
