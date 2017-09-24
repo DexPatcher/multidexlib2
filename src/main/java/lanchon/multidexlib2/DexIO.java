@@ -85,6 +85,7 @@ public class DexIO {
 		for (int i = 0; i < threadCount; i++) {
 			final BatchedIterator<ClassDef> batchedIterator =
 					new BatchedIterator<>(classIterator, lock, PER_THREAD_BATCH_SIZE);
+			if (i != 0 && !batchedIterator.hasNext()) break;
 			callables.add(new Callable<Void>() {
 				@Override
 				public Void call() throws IOException {
