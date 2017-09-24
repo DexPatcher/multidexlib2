@@ -46,8 +46,21 @@ public class DexIO {
 
 	static void writeRawDexSingleThread(File file, DexFile dexFile, int maxDexPoolSize, DexIO.Logger logger)
 			throws IOException {
-		writeCommonSingleThread(false, file, null, SingletonDexContainer.UNDEFINED_ENTRY_NAME, file, dexFile, 0, false,
-				maxDexPoolSize, logger);
+		Set<? extends ClassDef> classes = dexFile.getClasses();
+		Iterator<? extends ClassDef> classIterator = classes.iterator();
+		DexPool dexPool = new DexPool(dexFile.getOpcodes());
+		int classCount = 0;
+		while (classIterator.hasNext()) {
+			ClassDef classDef = classIterator.next();
+			dexPool.internClass(classDef);
+			if (getDexPoolOverflow(dexPool, maxDexPoolSize)) {
+				handleDexPoolOverflow(classDef, classCount, classes.size());
+				throw new AssertionError("unexpected type count");
+			}
+			classCount++;
+		}
+		if (logger != null) logger.log(file, SingletonDexContainer.UNDEFINED_ENTRY_NAME, classCount);
+		dexPool.writeTo(new FileDataStore(file));
 	}
 
 	static void writeMultiDexDirectorySingleThread(boolean multiDex, File directory, DexFileNameIterator nameIterator,
