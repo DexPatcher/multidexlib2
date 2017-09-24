@@ -129,8 +129,11 @@ public class DexIO {
 			while (classIterator.hasNext()) {
 				if (minimalMainDex && fileClassCount >= minMainDexClassCount) break;
 				ClassDef classDef = classIterator.peek();
-				if (!internClass(dexPool, classDef, maxDexPoolSize)) {
-					checkDexPoolOverflow(classDef, fileClassCount, minMainDexClassCount);
+				dexPool.mark();
+				dexPool.internClass(classDef);
+				if (getDexPoolOverflow(dexPool, maxDexPoolSize)) {
+					handleDexPoolOverflow(classDef, fileClassCount, minMainDexClassCount);
+					dexPool.reset();
 					break;
 				}
 				classIterator.next();
@@ -151,24 +154,17 @@ public class DexIO {
 		} while (classIterator.hasNext());
 	}
 
-	private static boolean internClass(DexPool dexPool, ClassDef classDef, int maxDexPoolSize) {
-		dexPool.mark();
-		dexPool.internClass(classDef);
-		if (
+	private static boolean getDexPoolOverflow(DexPool dexPool, int maxDexPoolSize) {
+		return
 				dexPool.typeSection.getItemCount() > maxDexPoolSize ||
 				//dexPool.protoSection.getItemCount() > maxDexPoolSize ||
 				dexPool.fieldSection.getItemCount() > maxDexPoolSize ||
 				dexPool.methodSection.getItemCount() > maxDexPoolSize ||
 				//dexPool.classSection.getItemCount() > maxDexPoolSize ||
-				false
-		) {
-			dexPool.reset();    // roll back interning on pool overflow
-			return false;
-		}
-		return true;
+				false;
 	}
 
-	private static void checkDexPoolOverflow(ClassDef classDef, int classCount, int minClassCount) {
+	private static void handleDexPoolOverflow(ClassDef classDef, int classCount, int minClassCount) {
 		if (classCount < minClassCount) throw new DexPoolOverflowException(
 				"Dex pool overflowed while writing type " + (classCount + 1) + " of " + minClassCount);
 		if (classCount == 0) throw new DexPoolOverflowException(
