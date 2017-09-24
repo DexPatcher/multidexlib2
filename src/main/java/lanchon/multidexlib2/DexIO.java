@@ -66,13 +66,6 @@ public class DexIO {
 	static void writeMultiDexDirectorySingleThread(boolean multiDex, File directory, DexFileNameIterator nameIterator,
 			DexFile dexFile, int minMainDexClassCount, boolean minimalMainDex, int maxDexPoolSize, DexIO.Logger logger)
 			throws IOException {
-		writeCommonSingleThread(multiDex, directory, nameIterator, null, null, dexFile, minMainDexClassCount,
-				minimalMainDex, maxDexPoolSize, logger);
-	}
-
-	private static void writeCommonSingleThread(boolean multiDex, File base, DexFileNameIterator nameIterator,
-			String currentName, File currentFile, DexFile dexFile, int minMainDexClassCount, boolean minimalMainDex,
-			int maxDexPoolSize, DexIO.Logger logger) throws IOException {
 		Set<? extends ClassDef> classes = dexFile.getClasses();
 		if (!multiDex) {
 			minMainDexClassCount = classes.size();
@@ -80,7 +73,7 @@ public class DexIO {
 		}
 		Object lock = new Object();
 		synchronized (lock) {       // avoid multiple synchronizations in single-threaded mode
-			writeCommon(base, nameIterator, currentName, currentFile, Iterators.peekingIterator(classes.iterator()),
+			writeCommon(directory, nameIterator, null, null, Iterators.peekingIterator(classes.iterator()),
 					minMainDexClassCount, minimalMainDex, dexFile.getOpcodes(), maxDexPoolSize, logger, lock);
 		}
 	}
