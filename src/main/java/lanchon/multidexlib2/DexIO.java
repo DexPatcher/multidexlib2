@@ -14,12 +14,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.lang.reflect.UndeclaredThrowableException;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -27,6 +24,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import com.google.common.collect.Iterators;
+import com.google.common.collect.PeekingIterator;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
@@ -68,24 +67,28 @@ public class DexIO {
 		}
 		Object lock = new Object();
 		synchronized (lock) {       // avoid multiple synchronizations in single-threaded mode
-			writeCommon(base, nameIterator, currentName, currentFile, classes.iterator(), minMainDexClassCount,
-					minimalMainDex, dexFile.getOpcodes(), maxDexPoolSize, logger, lock);
+			writeCommon(base, nameIterator, currentName, currentFile, Iterators.peekingIterator(classes.iterator()),
+					minMainDexClassCount, minimalMainDex, dexFile.getOpcodes(), maxDexPoolSize, logger, lock);
 		}
 	}
 
 	// Multi-Threaded Write
 
+	private static final int PER_THREAD_BATCH_SIZE = 100;
+
 	static void writeMultiDexDirectoryMultiThread(int threadCount, final File directory,
 			final DexFileNameIterator nameIterator, final DexFile dexFile, final int maxDexPoolSize,
 			final DexIO.Logger logger) throws IOException {
-		final Iterator<? extends ClassDef> classIterator = dexFile.getClasses().iterator();
+		Iterator<? extends ClassDef> classIterator = dexFile.getClasses().iterator();
 		final Object lock = new Object();
 		List<Callable<Void>> callables = new ArrayList<>(threadCount);
 		for (int i = 0; i < threadCount; i++) {
+			final BatchedIterator<ClassDef> batchedIterator =
+					new BatchedIterator<>(classIterator, lock, PER_THREAD_BATCH_SIZE);
 			callables.add(new Callable<Void>() {
 				@Override
 				public Void call() throws IOException {
-					writeCommon(directory, nameIterator, null, null, classIterator, 0, false, dexFile.getOpcodes(),
+					writeCommon(directory, nameIterator, null, null, batchedIterator, 0, false, dexFile.getOpcodes(),
 							maxDexPoolSize, logger, lock);
 					return null;
 				}
@@ -116,24 +119,21 @@ public class DexIO {
 
 	// Common Code
 
-	private static final int PER_THREAD_BATCH_SIZE = 100;
-
 	private static void writeCommon(File base, DexFileNameIterator nameIterator, String currentName, File currentFile,
-			Iterator<? extends ClassDef> classIterator, int minMainDexClassCount, boolean minimalMainDex,
+			PeekingIterator<? extends ClassDef> classIterator, int minMainDexClassCount, boolean minimalMainDex,
 			Opcodes opcodes, int maxDexPoolSize, DexIO.Logger logger, Object lock) throws IOException {
-		Deque<ClassDef> queue = new ArrayDeque<>(PER_THREAD_BATCH_SIZE);
-		ClassDef currentClass = getQueueItem(queue, classIterator, lock);
 		do {
 			DexPool dexPool = new DexPool(opcodes);
 			int fileClassCount = 0;
-			while (currentClass != null) {
+			while (classIterator.hasNext()) {
 				if (minimalMainDex && fileClassCount >= minMainDexClassCount) break;
-				if (!internClass(dexPool, currentClass, maxDexPoolSize)) {
-					checkDexPoolOverflow(currentClass, fileClassCount, minMainDexClassCount);
+				ClassDef classDef = classIterator.peek();
+				if (!internClass(dexPool, classDef, maxDexPoolSize)) {
+					checkDexPoolOverflow(classDef, fileClassCount, minMainDexClassCount);
 					break;
 				}
+				classIterator.next();
 				fileClassCount++;
-				currentClass = getQueueItem(queue, classIterator, lock);
 			}
 			synchronized (lock) {
 				if (currentFile == null) {
@@ -141,13 +141,13 @@ public class DexIO {
 					currentFile = new File(base, currentName);
 				}
 				if (logger != null) logger.log(base, currentName, fileClassCount);
-				fillQueue(queue, classIterator, PER_THREAD_BATCH_SIZE - 1);
+				if (classIterator instanceof BatchedIterator) ((BatchedIterator) classIterator).preloadBatch();
 			}
 			dexPool.writeTo(new FileDataStore(currentFile));
 			currentFile = null;
 			minMainDexClassCount = 0;
 			minimalMainDex = false;
-		} while (currentClass != null);
+		} while (classIterator.hasNext());
 	}
 
 	private static boolean internClass(DexPool dexPool, ClassDef classDef, int maxDexPoolSize) {
@@ -172,24 +172,6 @@ public class DexIO {
 				"Dex pool overflowed while writing type " + (classCount + 1) + " of " + minClassCount);
 		if (classCount == 0) throw new DexPoolOverflowException(
 				"Type too big for dex pool: " + classDef.getType());
-	}
-
-	private static <T> T getQueueItem(Queue<T> queue, Iterator<? extends T> iterator, Object lock) {
-		T item = queue.poll();
-		if (item == null) {
-			synchronized (lock) {
-				fillQueue(queue, iterator, PER_THREAD_BATCH_SIZE);
-			}
-			item = queue.poll();
-		}
-		return item;
-	}
-
-	private static <T> void fillQueue(Queue<T> queue, Iterator<? extends T> iterator, int targetSize) {
-		for (int i = queue.size(); i < targetSize; i++) {
-			if (!iterator.hasNext()) break;
-			queue.add(iterator.next());
-		}
 	}
 
 }
