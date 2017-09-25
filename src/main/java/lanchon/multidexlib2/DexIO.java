@@ -29,6 +29,7 @@ import com.google.common.collect.PeekingIterator;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
+import org.jf.dexlib2.writer.io.DexDataStore;
 import org.jf.dexlib2.writer.io.FileDataStore;
 import org.jf.dexlib2.writer.pool.DexPool;
 
@@ -44,8 +45,8 @@ public class DexIO {
 
 	// Single-Threaded Write
 
-	static void writeRawDexSingleThread(File file, DexFile dexFile, int maxDexPoolSize, DexIO.Logger logger)
-			throws IOException {
+	static void writeRawDexSingleThread(DexDataStore dataStore, DexFile dexFile, int maxDexPoolSize,
+			DexIO.Logger logger, File file) throws IOException {
 		Set<? extends ClassDef> classes = dexFile.getClasses();
 		Iterator<? extends ClassDef> classIterator = classes.iterator();
 		DexPool dexPool = new DexPool(dexFile.getOpcodes());
@@ -60,7 +61,7 @@ public class DexIO {
 			classCount++;
 		}
 		if (logger != null) logger.log(file, SingletonDexContainer.UNDEFINED_ENTRY_NAME, classCount);
-		dexPool.writeTo(new FileDataStore(file));
+		dexPool.writeTo(dataStore);
 	}
 
 	static void writeMultiDexDirectorySingleThread(boolean multiDex, File directory, DexFileNameIterator nameIterator,

@@ -21,6 +21,8 @@ import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.dexbacked.raw.HeaderItem;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.util.DexUtil;
+import org.jf.dexlib2.writer.io.DexDataStore;
+import org.jf.dexlib2.writer.io.FileDataStore;
 
 public class RawDexIO {
 
@@ -67,11 +69,15 @@ public class RawDexIO {
 
 	public static void writeRawDexFile(File file, DexFile dexFile, int maxDexPoolSize, DexIO.Logger logger)
 			throws IOException {
-		DexIO.writeRawDexSingleThread(file, dexFile, maxDexPoolSize, logger);
+		DexIO.writeRawDexSingleThread(new FileDataStore(file), dexFile, maxDexPoolSize, logger, file);
 	}
 
 	public static void writeRawDexFile(File file, DexFile dexFile, int maxDexPoolSize) throws IOException {
-		DexIO.writeRawDexSingleThread(file, dexFile, maxDexPoolSize, null);
+		DexIO.writeRawDexSingleThread(new FileDataStore(file), dexFile, maxDexPoolSize, null, null);
+	}
+
+	public static void writeRawDexFile(DexDataStore dataStore, DexFile dexFile, int maxDexPoolSize) throws IOException {
+		DexIO.writeRawDexSingleThread(dataStore, dexFile, maxDexPoolSize, null, null);
 	}
 
 }
