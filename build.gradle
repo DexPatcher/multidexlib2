@@ -21,6 +21,8 @@ group = 'com.github.lanchon.dexpatcher'
 version = dexlib2Version + multidexlib2VersionSuffix
 
 sourceCompatibility = '1.7'
+def jdk = findProperty('JDK7_HOME') ?: '/usr/lib/jvm/java-7-openjdk-amd64'
+compileJava.options.bootClasspath = new File(jdk, 'jre/lib/rt.jar')
 
 repositories {
     jcenter()
