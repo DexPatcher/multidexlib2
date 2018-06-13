@@ -62,7 +62,7 @@ public class RawDexIO {
 			int dexVersion = HeaderItem.getVersion(buf, offset);
 			opcodes = OpcodeUtils.getOpcodesFromDexVersion(dexVersion);
 		};
-		return new DexBackedDexFile(opcodes, buf, 0);
+		return new DexBackedDexFile(opcodes, buf, offset);
 	}
 
 	// Write
