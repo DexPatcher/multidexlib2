@@ -33,6 +33,16 @@ public class OpcodeUtils {
 		return o1.api >= o2.api ? o1 : o2;
 	}
 
+	/*
+	public static <T extends DexFile> Opcodes getNewestOpcodes(MultiDexContainer<T> container) throws IOException {
+		Opcodes opcodes = null;
+		for (String entryName : container.getDexEntryNames()) {
+			opcodes = OpcodeUtils.getNewestOpcodes(opcodes, container.getEntry(entryName).getOpcodes(), true);
+		}
+		return opcodes;
+	}
+	*/
+
 	private static IllegalArgumentException undefinedApiLevel() {
 		return new IllegalArgumentException("Opcodes instance has undefined api level");
 	}

@@ -43,15 +43,6 @@ public abstract class AbstractMultiDexContainer<T extends DexFile> implements Mu
 		return entryMap.get(entryName);
 	}
 
-	/*
-	public Opcodes getNewestOpcodes() {
-		Opcodes opcodes = null;
-		for (String entryName : getDexEntryNames()) {
-			opcodes = OpcodeUtils.getNewestOpcodes(opcodes, getEntry(entryName).getOpcodes(), true);
-		}
-	}
-	*/
-
 	protected DuplicateEntryNameException throwDuplicateEntryName(String entryName) {
 		throw new DuplicateEntryNameException(entryName);
 	}
