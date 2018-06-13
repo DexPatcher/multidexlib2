@@ -53,7 +53,7 @@ public class ZipFileDexContainer extends AbstractMultiDexContainer<WrappingMulti
 				}
 			}
 		}
-		initialize(entryMap, opcodes);
+		initialize(entryMap);
 	}
 
 }

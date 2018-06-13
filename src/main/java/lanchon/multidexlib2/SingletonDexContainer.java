@@ -13,7 +13,6 @@ package lanchon.multidexlib2;
 import java.util.Collections;
 import java.util.Map;
 
-import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.DexFile;
 
 public class SingletonDexContainer<D extends DexFile> extends AbstractMultiDexContainer<WrappingMultiDexFile<D>> {
@@ -31,10 +30,9 @@ public class SingletonDexContainer<D extends DexFile> extends AbstractMultiDexCo
 	}
 
 	public SingletonDexContainer(String entryName, D dexFile) {
-		Opcodes opcodes = dexFile.getOpcodes();
 		WrappingMultiDexFile<D> multiDexFile = new BasicMultiDexFile<>(this, entryName, dexFile);
 		Map<String, WrappingMultiDexFile<D>> entryMap = Collections.singletonMap(entryName, multiDexFile);
-		initialize(entryMap, opcodes);
+		initialize(entryMap);
 	}
 
 }

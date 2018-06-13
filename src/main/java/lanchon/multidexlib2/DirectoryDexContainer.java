@@ -32,7 +32,7 @@ public class DirectoryDexContainer extends AbstractMultiDexContainer<WrappingMul
 				if (entryMap.put(entryName, multiDexFile) != null) throwDuplicateEntryName(entryName);
 			}
 		}
-		initialize(entryMap, opcodes);
+		initialize(entryMap);
 	}
 
 }

@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.List;
 
-import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.MultiDexContainer;
 
@@ -23,24 +22,15 @@ public abstract class AbstractMultiDexContainer<T extends DexFile> implements Mu
 
 	private Map<String, T> entryMap;
 	private List<String> entryNames;
-	private Opcodes resolvedOpcodes;
 
 	protected AbstractMultiDexContainer() {}
 
-	protected void initialize(Map<String, T> entryMap, Opcodes opcodes) {
+	protected void initialize(Map<String, T> entryMap) {
 		if (entryMap == null) throw new NullPointerException("entryMap");
 		if (this.entryMap != null) throw new IllegalStateException("Already initialized");
 		this.entryMap = entryMap;
 		// See: https://github.com/JesusFreke/smali/issues/458
 		entryNames = Collections.unmodifiableList(new ArrayList<>(entryMap.keySet()));
-		if (opcodes == null) {
-			//opcodes = getNewestOpcodes();
-			for (T entry : entryMap.values()) {
-				opcodes = OpcodeUtils.getNewestOpcodes(opcodes, entry.getOpcodes(), true);
-			}
-			//if (opcodes == null) throw nullOpcodes();
-		}
-		resolvedOpcodes = opcodes;
 	}
 
 	@Override
@@ -51,12 +41,6 @@ public abstract class AbstractMultiDexContainer<T extends DexFile> implements Mu
 	@Override
 	public T getEntry(String entryName) {
 		return entryMap.get(entryName);
-	}
-
-	@Override
-	public Opcodes getOpcodes() {
-		//if (resolvedOpcodes == null) throw nullOpcodes();
-		return resolvedOpcodes;
 	}
 
 	/*
