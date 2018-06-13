@@ -24,16 +24,6 @@ public class OpcodeUtils {
 		return DexVersionMap.getHighestDexVersionFromApiLevel(opcodes.api);
 	}
 
-	@Deprecated
-	public static Opcodes getNewestOpcodesNullable(Opcodes o1, Opcodes o2) {
-		return getNewestOpcodes(o1, o2, true);
-	}
-
-	@Deprecated
-	public static Opcodes getNewestOpcodes(Opcodes o1, Opcodes o2) {
-		return getNewestOpcodes(o1, o2, false);
-	}
-
 	public static Opcodes getNewestOpcodes(Opcodes o1, Opcodes o2, boolean nullable) {
 		if (nullable) {
 			if (o1 == null) return o2;
