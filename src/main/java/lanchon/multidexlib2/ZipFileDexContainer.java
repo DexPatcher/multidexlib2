@@ -49,7 +49,7 @@ public class ZipFileDexContainer extends AbstractMultiDexContainer<WrappingMulti
 					}
 					WrappingMultiDexFile<DexBackedDexFile> multiDexFile =
 							new BasicMultiDexFile<>(this, entryName, dexFile);
-					if (entryMap.put(entryName, multiDexFile) != null) throwDuplicateEntryName(entryName);
+					if (entryMap.put(entryName, multiDexFile) != null) throw duplicateEntryName(entryName);
 				}
 			}
 		}

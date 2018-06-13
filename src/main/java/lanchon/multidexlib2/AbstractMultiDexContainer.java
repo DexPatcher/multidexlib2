@@ -43,8 +43,8 @@ public abstract class AbstractMultiDexContainer<T extends DexFile> implements Mu
 		return entryMap.get(entryName);
 	}
 
-	protected DuplicateEntryNameException throwDuplicateEntryName(String entryName) {
-		throw new DuplicateEntryNameException(entryName);
+	protected DuplicateEntryNameException duplicateEntryName(String entryName) {
+		return new DuplicateEntryNameException(entryName);
 	}
 
 }
