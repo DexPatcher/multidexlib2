@@ -10,36 +10,40 @@
 
 package lanchon.multidexlib2;
 
+import org.jf.dexlib2.VersionMap;
 import org.jf.dexlib2.dexbacked.raw.HeaderItem;
 
 public class DexVersionMap {
 
-	// TODO: Switch to dexlib2's implementation when it gets to support this functionality.
+	//private static final int DEVEL_API_LEVEL = 10000;   // Build.VERSION_CODES.CUR_DEVELOPMENT
+
+	//private static final int MAX_DEX_VERSION = getDexVersionFromApiLevel(DEVEL_API_LEVEL);
+	//private static final int MAX_API_LEVEL = getHighestApiLevelFromDexVersion(MAX_DEX_VERSION);
 
 	/*
 	public static boolean isSupportedApiLevel(int apiLevel) {
-		return  apiLevel <= 25;
-	}
-
-	public static int getHighestDexVersionFromApiLevel(int apiLevel) {
-		return  apiLevel <= 23 ? 35 :
-				37;
+		return apiLevel <= MAX_API_LEVEL;
 	}
 	*/
 
-	public static int getHighestDexVersionFromApiLevel(int apiLevel) {
+	public static int getDexVersionFromApiLevel(int apiLevel) {
 		return HeaderItem.getVersion(HeaderItem.getMagicForApi(apiLevel), 0);
 	}
 
+	/*
 	public static boolean isSupportedDexVersion(int dexVersion) {
-		return  dexVersion == 35 ||
-				dexVersion == 37;
+		try {
+			VersionMap.mapDexVersionToApi(dexVersion);
+			return true;
+		} catch (RuntimeException e) {
+			return false;
+		}
 	}
+	*/
 
 	public static int getHighestApiLevelFromDexVersion(int dexVersion) {
-		return  dexVersion <= 35 ? 23 :
-				dexVersion <= 37 ? 25 :
-				10000;      // Build.VERSION_CODES.CUR_DEVELOPMENT
+		//if (dexVersion > MAX_DEX_VERSION) return DEVEL_API_LEVEL;
+		return VersionMap.mapDexVersionToApi(dexVersion);
 	}
 
 	private DexVersionMap() {}

@@ -21,7 +21,7 @@ public class OpcodeUtils {
 
 	public static int getDexVersionFromOpcodes(Opcodes opcodes) {
 		if (opcodes.api == VersionMap.NO_VERSION) throw undefinedApiLevel();
-		return DexVersionMap.getHighestDexVersionFromApiLevel(opcodes.api);
+		return DexVersionMap.getDexVersionFromApiLevel(opcodes.api);
 	}
 
 	public static Opcodes getNewestOpcodes(Opcodes o1, Opcodes o2, boolean nullable) {
