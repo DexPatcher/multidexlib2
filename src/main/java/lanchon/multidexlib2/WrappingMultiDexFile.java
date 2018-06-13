@@ -13,8 +13,8 @@ package lanchon.multidexlib2;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.MultiDexContainer.MultiDexFile;
 
-public interface WrappingMultiDexFile<D extends DexFile> extends MultiDexFile {
+public interface WrappingMultiDexFile<T extends DexFile> extends MultiDexFile {
 
-	D getWrappedDexFile();
+	T getWrappedDexFile();
 
 }
