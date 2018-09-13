@@ -29,13 +29,14 @@ import com.google.common.collect.PeekingIterator;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
+import org.jf.dexlib2.writer.DexWriter;
 import org.jf.dexlib2.writer.io.DexDataStore;
 import org.jf.dexlib2.writer.io.FileDataStore;
 import org.jf.dexlib2.writer.pool.DexPool;
 
 public class DexIO {
 
-	public static final int DEFAULT_MAX_DEX_POOL_SIZE = 0x10000;
+	public static final int DEFAULT_MAX_DEX_POOL_SIZE = DexWriter.MAX_POOL_SIZE;
 
 	public interface Logger {
 		void log(File file, String entryName, int typeCount);
