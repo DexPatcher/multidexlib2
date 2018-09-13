@@ -55,7 +55,7 @@ public class DexIO {
 		while (classIterator.hasNext()) {
 			ClassDef classDef = classIterator.next();
 			dexPool.internClass(classDef);
-			if (getDexPoolOverflow(dexPool, maxDexPoolSize)) {
+			if (dexPool.hasOverflowed(maxDexPoolSize)) {
 				handleDexPoolOverflow(classDef, classCount, classes.size());
 				throw new AssertionError("unexpected type count");
 			}
@@ -139,7 +139,7 @@ public class DexIO {
 				ClassDef classDef = classIterator.peek();
 				dexPool.mark();
 				dexPool.internClass(classDef);
-				if (getDexPoolOverflow(dexPool, maxDexPoolSize)) {
+				if (dexPool.hasOverflowed(maxDexPoolSize)) {
 					handleDexPoolOverflow(classDef, fileClassCount, minMainDexClassCount);
 					dexPool.reset();
 					break;
@@ -158,10 +158,6 @@ public class DexIO {
 			minMainDexClassCount = 0;
 			minimalMainDex = false;
 		} while (classIterator.hasNext());
-	}
-
-	private static boolean getDexPoolOverflow(DexPool dexPool, int maxDexPoolSize) {
-		return dexPool.hasOverflowed(maxDexPoolSize);
 	}
 
 	private static void handleDexPoolOverflow(ClassDef classDef, int classCount, int minClassCount) {
