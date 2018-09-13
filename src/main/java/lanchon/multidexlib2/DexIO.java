@@ -160,13 +160,7 @@ public class DexIO {
 	}
 
 	private static boolean getDexPoolOverflow(DexPool dexPool, int maxDexPoolSize) {
-		return
-				dexPool.typeSection.getItemCount() > maxDexPoolSize ||
-				//dexPool.protoSection.getItemCount() > maxDexPoolSize ||
-				dexPool.fieldSection.getItemCount() > maxDexPoolSize ||
-				dexPool.methodSection.getItemCount() > maxDexPoolSize ||
-				//dexPool.classSection.getItemCount() > maxDexPoolSize ||
-				false;
+		return dexPool.hasOverflowed(maxDexPoolSize);
 	}
 
 	private static void handleDexPoolOverflow(ClassDef classDef, int classCount, int minClassCount) {
