@@ -12,7 +12,6 @@ package lanchon.multidexlib2;
 
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.VersionMap;
-import org.jf.dexlib2.dexbacked.raw.HeaderItem;
 
 public class OpcodeUtils {
 
@@ -25,7 +24,8 @@ public class OpcodeUtils {
 	public static int getDexVersionFromOpcodes(Opcodes opcodes) {
 		if (opcodes.api == VersionMap.NO_VERSION) throw undefinedApiLevel();
 		//return DexVersionMap.getDexVersionFromApiLevel(opcodes.api);
-		return HeaderItem.getVersion(HeaderItem.getMagicForApi(opcodes.api), 0);
+		//return HeaderItem.getVersion(HeaderItem.getMagicForApi(opcodes.api), 0);
+		return VersionMap.mapApiToDexVersion(opcodes.api);
 	}
 
 	public static Opcodes getNewestOpcodes(Opcodes o1, Opcodes o2, boolean nullable) {
