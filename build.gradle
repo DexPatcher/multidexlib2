@@ -29,7 +29,7 @@ repositories {
     jcenter()
 
     // Use local fork of dexlib2:
-    // (https://github.com/DexPatcher/dexlib2-fork-for-dexpatcher)
+    // (https://github.com/DexPatcher/smali/tree/dxp-v1.1.x)
     //flatDir dirs: '../dexlib2-fork-for-dexpatcher/dexlib2/build/libs'
     //flatDir dirs: '../dexlib2-fork-for-dexpatcher/util/build/libs'
 }
