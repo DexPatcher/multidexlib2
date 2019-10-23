@@ -18,7 +18,6 @@ import com.google.common.io.ByteStreamsHack;
 import com.google.common.io.Files;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
-import org.jf.dexlib2.dexbacked.raw.HeaderItem;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.util.DexUtil;
 import org.jf.dexlib2.writer.io.DexDataStore;
