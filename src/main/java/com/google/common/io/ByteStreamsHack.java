@@ -24,8 +24,10 @@ public class ByteStreamsHack {
 		// An equivalent -though inefficient- implementation using public-only API is:
 		//return ByteStreams.toByteArray(inputStream);
 
-		if (expectedSize < 0) expectedSize = 0;
-		return Files.readFile(inputStream, expectedSize);
+		// Note that some special files may report size 0 but have content.
+		return expectedSize <= 0 ?
+				ByteStreams.toByteArray(inputStream) :
+				ByteStreams.toByteArray(inputStream, expectedSize);
 
 	}
 
