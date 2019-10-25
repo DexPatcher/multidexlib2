@@ -15,7 +15,7 @@ import java.util.Map;
 
 import org.jf.dexlib2.iface.DexFile;
 
-public class SingletonDexContainer<T extends DexFile> extends AbstractMultiDexContainer<WrappingMultiDexFile<T>> {
+public class SingletonDexContainer<T extends DexFile> extends AbstractMultiDexContainer<T> {
 
 	// I insist that some dex container entries do not have names
 	// even though dexlib2 does not allow null entry names.
@@ -30,8 +30,8 @@ public class SingletonDexContainer<T extends DexFile> extends AbstractMultiDexCo
 	}
 
 	public SingletonDexContainer(String entryName, T dexFile) {
-		WrappingMultiDexFile<T> multiDexFile = new BasicMultiDexFile<>(this, entryName, dexFile);
-		Map<String, WrappingMultiDexFile<T>> entryMap = Collections.singletonMap(entryName, multiDexFile);
+		DexEntry<T> entry = new BasicDexEntry<>(this, entryName, dexFile);
+		Map<String, DexEntry<T>> entryMap = Collections.singletonMap(entryName, entry);
 		initialize(entryMap);
 	}
 

@@ -30,18 +30,18 @@ public class MultiDexContainerBackedDexFile<T extends DexFile> implements DexFil
 		List<String> entryNames = container.getDexEntryNames();
 		if (entryNames.size() == 1) {
 			String entryName = entryNames.get(0);
-			T entry = container.getEntry(entryName);
-			classes = Collections.unmodifiableSet(entry.getClasses());
-			opcodes = entry.getOpcodes();
+			T entryDex = container.getEntry(entryName).getDexFile();
+			classes = Collections.unmodifiableSet(entryDex.getClasses());
+			opcodes = entryDex.getOpcodes();
 		} else {
 			LinkedHashSet<ClassDef> accumulatedClasses = new LinkedHashSet<>();
 			Opcodes resolvedOpcodes = null;
 			for (String entryName : entryNames) {
-				T entry = container.getEntry(entryName);
-				for (ClassDef entryClass : entry.getClasses()) {
+				T entryDex = container.getEntry(entryName).getDexFile();
+				for (ClassDef entryClass : entryDex.getClasses()) {
 					if (!accumulatedClasses.add(entryClass)) throw new DuplicateTypeException(entryClass.getType());
 				}
-				resolvedOpcodes = OpcodeUtils.getNewestOpcodes(resolvedOpcodes, entry.getOpcodes(), true);
+				resolvedOpcodes = OpcodeUtils.getNewestOpcodes(resolvedOpcodes, entryDex.getOpcodes(), true);
 			}
 			classes = Collections.unmodifiableSet(accumulatedClasses);
 			opcodes = resolvedOpcodes;

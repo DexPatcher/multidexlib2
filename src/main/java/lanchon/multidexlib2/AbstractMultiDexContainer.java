@@ -20,12 +20,12 @@ import org.jf.dexlib2.iface.MultiDexContainer;
 
 public abstract class AbstractMultiDexContainer<T extends DexFile> implements MultiDexContainer<T> {
 
-	private Map<String, T> entryMap;
+	private Map<String, DexEntry<T>> entryMap;
 	private List<String> entryNames;
 
 	protected AbstractMultiDexContainer() {}
 
-	protected void initialize(Map<String, T> entryMap) {
+	protected void initialize(Map<String, DexEntry<T>> entryMap) {
 		if (entryMap == null) throw new NullPointerException("entryMap");
 		if (this.entryMap != null) throw new IllegalStateException("Already initialized");
 		this.entryMap = entryMap;
@@ -39,7 +39,7 @@ public abstract class AbstractMultiDexContainer<T extends DexFile> implements Mu
 	}
 
 	@Override
-	public T getEntry(String entryName) {
+	public DexEntry<T> getEntry(String entryName) {
 		return entryMap.get(entryName);
 	}
 

@@ -22,7 +22,7 @@ import java.util.zip.ZipFile;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 
-public class ZipFileDexContainer extends AbstractMultiDexContainer<WrappingMultiDexFile<DexBackedDexFile>> {
+public class ZipFileDexContainer extends AbstractMultiDexContainer<DexBackedDexFile> {
 
 	public static boolean isZipFile(File zip) {
 		if (!zip.isFile()) return false;
@@ -36,7 +36,7 @@ public class ZipFileDexContainer extends AbstractMultiDexContainer<WrappingMulti
 	}
 
 	public ZipFileDexContainer(File zip, DexFileNamer namer, Opcodes opcodes) throws IOException {
-		Map<String, WrappingMultiDexFile<DexBackedDexFile>> entryMap = new TreeMap<>(new DexFileNameComparator(namer));
+		Map<String, DexEntry<DexBackedDexFile>> entryMap = new TreeMap<>(new DexFileNameComparator(namer));
 		try (ZipFile zipFile = new ZipFile(zip)) {
 			Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
 			while (zipEntries.hasMoreElements()) {
@@ -47,9 +47,8 @@ public class ZipFileDexContainer extends AbstractMultiDexContainer<WrappingMulti
 					try (InputStream inputStream = zipFile.getInputStream(zipEntry)) {
 						dexFile = RawDexIO.readRawDexFile(inputStream, zipEntry.getSize(), opcodes);
 					}
-					WrappingMultiDexFile<DexBackedDexFile> multiDexFile =
-							new BasicMultiDexFile<>(this, entryName, dexFile);
-					if (entryMap.put(entryName, multiDexFile) != null) throw duplicateEntryName(entryName);
+					DexEntry<DexBackedDexFile> entry = new BasicDexEntry<>(this, entryName, dexFile);
+					if (entryMap.put(entryName, entry) != null) throw duplicateEntryName(entryName);
 				}
 			}
 		}
