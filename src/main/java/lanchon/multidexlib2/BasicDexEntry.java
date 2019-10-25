@@ -10,35 +10,21 @@
 
 package lanchon.multidexlib2;
 
-import java.util.Set;
-
-import org.jf.dexlib2.Opcodes;
-import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.MultiDexContainer;
-import org.jf.dexlib2.iface.MultiDexContainer.MultiDexFile;
+import org.jf.dexlib2.iface.MultiDexContainer.DexEntry;
 
-public class BasicMultiDexFile<C extends MultiDexContainer<? extends MultiDexFile>, D extends DexFile>
-		implements WrappingMultiDexFile<D> {
+public class BasicDexEntry<C extends MultiDexContainer< /* ? extends */ D>, D extends DexFile>
+		implements DexEntry<D> {
 
 	private final C container;
 	private final String entryName;
 	private final D dexFile;
 
-	public BasicMultiDexFile(C container, String entryName, D dexFile) {
+	public BasicDexEntry(C container, String entryName, D dexFile) {
 		this.container = container;
 		this.entryName = entryName;
 		this.dexFile = dexFile;
-	}
-
-	@Override
-	public Set<? extends ClassDef> getClasses() {
-		return dexFile.getClasses();
-	}
-
-	@Override
-	public Opcodes getOpcodes() {
-		return dexFile.getOpcodes();
 	}
 
 	@Override
@@ -52,7 +38,7 @@ public class BasicMultiDexFile<C extends MultiDexContainer<? extends MultiDexFil
 	}
 
 	@Override
-	public D getWrappedDexFile() {
+	public D getDexFile() {
 		return dexFile;
 	}
 
