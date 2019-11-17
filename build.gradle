@@ -42,18 +42,27 @@ def sharedManifest = manifest {
 
 jar {
     manifest.from sharedManifest
+    reproducibleFileOrder = true
+    preserveFileTimestamps = false
+    duplicatesStrategy = DuplicatesStrategy.FAIL
 }
 
 task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
     manifest.from sharedManifest
+    reproducibleFileOrder = true
+    preserveFileTimestamps = false
+    duplicatesStrategy = DuplicatesStrategy.FAIL
 }
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
     from javadoc
     manifest.from sharedManifest
+    reproducibleFileOrder = true
+    preserveFileTimestamps = false
+    duplicatesStrategy = DuplicatesStrategy.FAIL
 }
 
 artifacts {
