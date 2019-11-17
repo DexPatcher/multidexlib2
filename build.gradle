@@ -9,7 +9,7 @@
  */
 
 plugins {
-    id 'java'
+    id 'java-library'
     id 'signing'
     id 'maven'
 }
@@ -30,7 +30,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.smali:dexlib2:' + dexlib2Version
+    api 'org.smali:dexlib2:' + dexlib2Version
 }
 
 def sharedManifest = manifest {
