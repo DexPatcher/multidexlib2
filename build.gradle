@@ -10,8 +10,8 @@
 
 plugins {
     id 'java-library'
+    id 'maven-publish'
     id 'signing'
-    id 'maven'
 }
 
 def dexlib2Version = '2.3.4'
@@ -33,6 +33,11 @@ dependencies {
     api 'org.smali:dexlib2:' + dexlib2Version
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 def sharedManifest = manifest {
     attributes(
             'Implementation-Title': 'multidexlib2',
@@ -40,84 +45,64 @@ def sharedManifest = manifest {
     )
 }
 
-jar {
+tasks.withType(Jar).configureEach {
     manifest.from sharedManifest
     reproducibleFileOrder = true
     preserveFileTimestamps = false
     duplicatesStrategy = DuplicatesStrategy.FAIL
 }
 
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-    manifest.from sharedManifest
-    reproducibleFileOrder = true
-    preserveFileTimestamps = false
-    duplicatesStrategy = DuplicatesStrategy.FAIL
-}
-
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-    manifest.from sharedManifest
-    reproducibleFileOrder = true
-    preserveFileTimestamps = false
-    duplicatesStrategy = DuplicatesStrategy.FAIL
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
-
-if (project.hasProperty('ossrhUsername')) {
-
-    signing {
-        sign configurations.archives
-    }
-
-    uploadArchives {
-        repositories.mavenDeployer {
-            pom.project {
-                name 'multidexlib2'
-                description 'Multi-dex extensions for dexlib2.'
-                url 'https://github.com/DexPatcher/multidexlib2'
-
+publishing {
+    publications {
+        multidexlib2(MavenPublication) {
+            artifactId = 'multidexlib2'
+            from components.java
+            pom {
+                name = 'multidexlib2'
+                description = 'Multi-dex extensions for dexlib2.'
+                url = 'https://github.com/DexPatcher/multidexlib2'
                 scm {
-                    connection 'scm:git:git://github.com/DexPatcher/multidexlib2.git'
-                    developerConnection 'scm:git:ssh://github.com:DexPatcher/multidexlib2.git'
-                    url 'https://github.com/DexPatcher/multidexlib2/tree/master'
+                    connection = 'scm:git:git://github.com/DexPatcher/multidexlib2.git'
+                    developerConnection = 'scm:git:ssh://github.com:DexPatcher/multidexlib2.git'
+                    url = 'https://github.com/DexPatcher/multidexlib2/tree/master'
                 }
-
                 licenses {
                     license {
-                        name 'GNU General Public License (version 3 or later)'
-                        url 'https://www.gnu.org/licenses/gpl.txt'
+                        name = 'GNU General Public License (version 3 or later)'
+                        url = 'https://www.gnu.org/licenses/gpl.txt'
                     }
                 }
-
                 developers {
                     developer {
-                        name 'Lanchon'
-                        url 'https://github.com/Lanchon'
+                        name = 'Lanchon'
+                        url = 'https://github.com/Lanchon'
                     }
                 }
-            }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication userName: ossrhUsername, password: ossrhPassword
-            }
-
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication userName: ossrhUsername, password: ossrhPassword
-            }
-
-            beforeDeployment {
-                signing.signPom(it)
             }
         }
     }
+}
 
+publishing {
+    repositories {
+        maven {
+            if (project.hasProperty('publishing.url')) {
+                url = project.getProperty('publishing.url')
+                credentials {
+                    username = project.getProperty('publishing.username')
+                    password = project.getProperty('publishing.password')
+                }
+            } else {
+                url = layout.buildDirectory.dir('repository')
+            }
+        }
+    }
+}
+
+signing {
+    if (project.hasProperty('signing.secretKeyRingFile')) {
+        sign publishing.publications.multidexlib2
+    }
 }
 
 wrapper {
