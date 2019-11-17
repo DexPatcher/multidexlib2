@@ -118,6 +118,25 @@ signing {
     }
 }
 
+task checkCopyrightNotice {
+    dependsOn { subprojects*.tasks.build }
+    def notice = "Copyright 2015-${new java.text.SimpleDateFormat('yyyy').format(new Date())}"
+    def checkNotice = { noticeFile ->
+        if (!file(noticeFile).text.contains(notice)) {
+            System.err.println "********************************  WARNING  ********************************"
+            System.err.println "Expired copyright notice: ${noticeFile}"
+            System.err.println "***************************************************************************"
+        }
+    }
+    doLast {
+        checkNotice 'NOTICE.txt'
+    }
+}
+
+build {
+    dependsOn checkCopyrightNotice
+}
+
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
 }
