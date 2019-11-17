@@ -110,3 +110,7 @@ if (project.hasProperty('ossrhUsername')) {
     }
 
 }
+
+wrapper {
+    distributionType = Wrapper.DistributionType.ALL
+}
