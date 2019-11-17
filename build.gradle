@@ -38,6 +38,19 @@ java {
     withSourcesJar()
 }
 
+def generatedResourcesDir = layout.buildDirectory.get().dir('generated-resources')
+
+task generateResources(type: Sync) {
+    // Add copyright notice license.
+    from(rootDir) {
+        include 'NOTICE.txt'
+        include 'LICENSE.txt'
+    }
+    into generatedResourcesDir
+}
+
+sourceSets.main.output.dir builtBy: generateResources, generatedResourcesDir
+
 def sharedManifest = manifest {
     attributes(
             'Implementation-Title': 'multidexlib2',
