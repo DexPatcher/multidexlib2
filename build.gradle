@@ -77,7 +77,7 @@ publishing {
                 scm {
                     connection = 'scm:git:git://github.com/DexPatcher/multidexlib2.git'
                     developerConnection = 'scm:git:ssh://github.com:DexPatcher/multidexlib2.git'
-                    url = 'https://github.com/DexPatcher/multidexlib2/tree/master'
+                    url = 'https://github.com/DexPatcher/multidexlib2'
                 }
                 licenses {
                     license {
