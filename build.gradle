@@ -121,16 +121,12 @@ publishing {
 
 signing {
     if (project.hasProperty('signing.secretKeyRingFile')) {
-        sign publishing.publications.multidexlib2
+        sign publishing.publications
     }
 }
 
 apply from: 'check-copyright.gradle'
 
-assemble {
-    dependsOn publishAllPublicationsToLocalRepository
-}
+assemble.dependsOn publishAllPublicationsToLocalRepository
 
-wrapper {
-    distributionType = Wrapper.DistributionType.ALL
-}
+wrapper.distributionType = Wrapper.DistributionType.ALL
