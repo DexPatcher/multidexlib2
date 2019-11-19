@@ -74,22 +74,26 @@ publishing {
                 name = 'multidexlib2'
                 description = 'Multi-dex extensions for dexlib2.'
                 url = 'https://github.com/DexPatcher/multidexlib2'
-                scm {
-                    connection = 'scm:git:git://github.com/DexPatcher/multidexlib2.git'
-                    developerConnection = 'scm:git:ssh://github.com:DexPatcher/multidexlib2.git'
-                    url = 'https://github.com/DexPatcher/multidexlib2'
-                }
                 licenses {
                     license {
                         name = 'GNU General Public License (version 3 or later)'
                         url = 'https://www.gnu.org/licenses/gpl.txt'
                     }
                 }
+                organization {
+                    name = 'DexPatcher'
+                    url = 'https://dexpatcher.github.io/'
+                }
                 developers {
                     developer {
                         name = 'Lanchon'
                         url = 'https://github.com/Lanchon'
                     }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/DexPatcher/multidexlib2.git'
+                    developerConnection = 'scm:git:ssh://github.com:DexPatcher/multidexlib2.git'
+                    url = 'https://github.com/DexPatcher/multidexlib2'
                 }
             }
         }
