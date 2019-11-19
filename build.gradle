@@ -20,6 +20,9 @@ def multidexlib2VersionSuffix = ''
 group = 'com.github.lanchon.dexpatcher'
 version = dexlib2Version + multidexlib2VersionSuffix
 
+def mainArtifact = 'multidexlib2'
+def artifactName = mainArtifact
+
 sourceCompatibility = '1.7'
 def jdk = findProperty('JDK7_HOME') ?: '/usr/lib/jvm/java-7-openjdk-amd64'
 def jdk_rt = new File(jdk, 'jre/lib/rt.jar')
@@ -53,7 +56,7 @@ sourceSets.main.output.dir builtBy: generateResources, generatedResourcesDir
 
 def sharedManifest = manifest {
     attributes(
-            'Implementation-Title': 'multidexlib2',
+            'Implementation-Title': artifactName,
             'Implementation-Version': version
     )
 }
@@ -65,68 +68,21 @@ tasks.withType(Jar).configureEach {
     duplicatesStrategy = DuplicatesStrategy.FAIL
 }
 
+apply from: 'configure-publishing.gradle'
+
 publishing {
     publications {
         multidexlib2(MavenPublication) {
-            artifactId = 'multidexlib2'
+            artifactId = mainArtifact
             from components.java
             pom {
-                name = 'multidexlib2'
-                description = 'Multi-dex extensions for dexlib2.'
-                url = 'https://github.com/DexPatcher/multidexlib2'
-                licenses {
-                    license {
-                        name = 'GNU General Public License (version 3 or later)'
-                        url = 'https://www.gnu.org/licenses/gpl.txt'
-                    }
-                }
-                organization {
-                    name = 'DexPatcher'
-                    url = 'https://dexpatcher.github.io/'
-                }
-                developers {
-                    developer {
-                        name = 'Lanchon'
-                        url = 'https://github.com/Lanchon'
-                    }
-                }
-                scm {
-                    connection = 'scm:git:git://github.com/DexPatcher/multidexlib2.git'
-                    developerConnection = 'scm:git:ssh://github.com:DexPatcher/multidexlib2.git'
-                    url = 'https://github.com/DexPatcher/multidexlib2'
-                }
+                name = artifactName
+                configurePom it
             }
         }
-    }
-}
-
-publishing {
-    repositories {
-        maven {
-            name = 'local'
-            url = layout.buildDirectory.dir('repository')
-        }
-        if (project.hasProperty('publishing.url')) {
-            maven {
-                name = 'remote'
-                url = project.getProperty('publishing.url')
-                credentials {
-                    username = project.getProperty('publishing.username')
-                    password = project.getProperty('publishing.password')
-                }
-            }
-        }
-    }
-}
-
-signing {
-    if (project.hasProperty('signing.secretKeyRingFile')) {
-        sign publishing.publications
     }
 }
 
 apply from: 'check-copyright.gradle'
-
-assemble.dependsOn publishAllPublicationsToLocalRepository
 
 wrapper.distributionType = Wrapper.DistributionType.ALL
