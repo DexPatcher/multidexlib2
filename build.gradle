@@ -99,14 +99,17 @@ publishing {
 publishing {
     repositories {
         maven {
-            if (project.hasProperty('publishing.url')) {
+            name = 'local'
+            url = layout.buildDirectory.dir('repository')
+        }
+        if (project.hasProperty('publishing.url')) {
+            maven {
+                name = 'remote'
                 url = project.getProperty('publishing.url')
                 credentials {
                     username = project.getProperty('publishing.username')
                     password = project.getProperty('publishing.password')
                 }
-            } else {
-                url = layout.buildDirectory.dir('repository')
             }
         }
     }
@@ -119,6 +122,10 @@ signing {
 }
 
 apply from: 'check-copyright.gradle'
+
+assemble {
+    dependsOn publishAllPublicationsToLocalRepository
+}
 
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
