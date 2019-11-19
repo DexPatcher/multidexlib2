@@ -20,8 +20,8 @@ def multidexlib2VersionSuffix = ''
 group = 'com.github.lanchon.dexpatcher'
 version = dexlib2Version + multidexlib2VersionSuffix
 
-def mainArtifact = 'multidexlib2'
-def artifactName = mainArtifact
+ext.mainArtifact = 'multidexlib2'
+ext.artifactName = mainArtifact
 
 sourceCompatibility = '1.7'
 def jdk = findProperty('JDK7_HOME') ?: '/usr/lib/jvm/java-7-openjdk-amd64'
@@ -36,37 +36,7 @@ dependencies {
     api 'org.smali:dexlib2:' + dexlib2Version
 }
 
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-
-def generatedResourcesDir = layout.buildDirectory.get().dir('generated-resources')
-
-task generateResources(type: Sync) {
-    // Add copyright notice license.
-    from(rootDir) {
-        include 'NOTICE.txt'
-        include 'LICENSE.txt'
-    }
-    into generatedResourcesDir
-}
-
-sourceSets.main.output.dir builtBy: generateResources, generatedResourcesDir
-
-def sharedManifest = manifest {
-    attributes(
-            'Implementation-Title': artifactName,
-            'Implementation-Version': version
-    )
-}
-
-tasks.withType(Jar).configureEach {
-    manifest.from sharedManifest
-    reproducibleFileOrder = true
-    preserveFileTimestamps = false
-    duplicatesStrategy = DuplicatesStrategy.FAIL
-}
+apply from: 'configure-artifacts.gradle'
 
 apply from: 'configure-publishing.gradle'
 
