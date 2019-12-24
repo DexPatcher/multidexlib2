@@ -44,7 +44,7 @@ public class BasicDexFileNamer implements DexFileNamer {
 	public int getIndex(String name) {
 		if (!(name.startsWith(prefix) && name.endsWith(suffix))) return -1;
 		String s = name.substring(prefix.length(), name.length() - suffix.length());
-		if (s.length() == 0) return 0;
+		if (s.isEmpty()) return 0;
 		int i;
 		try { i = Integer.parseInt(s); }
 		catch (NumberFormatException e) { return -1; }
