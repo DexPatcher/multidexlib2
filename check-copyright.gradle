@@ -8,9 +8,11 @@
  * or (at your option) any later version.
  */
 
+import java.text.SimpleDateFormat
+
 task checkCopyrightNotice {
     dependsOn { subprojects*.tasks.build }
-    def notice = "Copyright 2015-${new java.text.SimpleDateFormat('yyyy').format(new Date())}"
+    def notice = "Copyright 2015-${new SimpleDateFormat('yyyy').format(new Date())}"
     def checkNotice = { noticeFile ->
         if (!file(noticeFile).text.contains(notice)) {
             System.err.println "********************************  WARNING  ********************************"
