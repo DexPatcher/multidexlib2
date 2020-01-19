@@ -55,7 +55,7 @@ public class RawDexIO {
 		return readRawDexFile(buf, 0, opcodes);
 	}
 
-	public static DexBackedDexFile readRawDexFile(byte[] buf, int offset, Opcodes opcodes) throws IOException {
+	public static DexBackedDexFile readRawDexFile(byte[] buf, int offset, Opcodes opcodes) {
 		// This method now relies on the automatic dex version handling implemented in dexlib2 since version 2.2.4.
 		DexUtil.verifyDexHeader(buf, offset);
 		return new DexBackedDexFile(opcodes, buf, offset);
