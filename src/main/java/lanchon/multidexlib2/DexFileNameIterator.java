@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
 
 public class DexFileNameIterator implements Iterator<String> {
 
-	public static int NO_MAX_COUNT = -1;
+	public static final int NO_MAX_COUNT = -1;
 
 	private final DexFileNamer namer;
 	private final int maxCount;
