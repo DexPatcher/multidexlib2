@@ -43,6 +43,7 @@ public class RawDexIO {
 			return readRawDexFile(inputStream, file.length(), opcodes);
 		}
 		*/
+		//noinspection UnstableApiUsage
 		byte[] buf = Files.toByteArray(file);
 		return readRawDexFile(buf, 0, opcodes);
 	}

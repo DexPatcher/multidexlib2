@@ -48,6 +48,7 @@ public class MultiDexIO {
 		MultiDexContainer<DexBackedDexFile> container = readMultiDexContainer(file, namer, opcodes);
 		if (logger != null) {
 			for (String name : container.getDexEntryNames()) {
+				//noinspection ConstantConditions
 				logger.log(file, name, container.getEntry(name).getDexFile().getClasses().size());
 			}
 		}

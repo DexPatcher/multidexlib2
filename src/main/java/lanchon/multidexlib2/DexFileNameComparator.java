@@ -28,7 +28,7 @@ public class DexFileNameComparator implements Comparator<String> {
 		boolean rv = (ri >= 0);
 		if (lv != rv) return lv ? -1 : 1;
 		if (!lv) return l.compareTo(r);
-		return li < ri ? -1 : (li > ri ? 1 : 0);
+		return Integer.compare(li, ri);
 	}
 
 	public DexFileNamer getNamer() {

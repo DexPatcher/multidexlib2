@@ -74,6 +74,7 @@ public class DexIO {
 			minimalMainDex = false;
 		}
 		Object lock = new Object();
+		//noinspection SynchronizationOnLocalVariableOrMethodParameter
 		synchronized (lock) {       // avoid multiple synchronizations in single-threaded mode
 			writeMultiDexDirectoryCommon(directory, nameIterator, Iterators.peekingIterator(classes.iterator()),
 					minMainDexClassCount, minimalMainDex, dexFile.getOpcodes(), maxDexPoolSize, logger, lock);
@@ -94,6 +95,7 @@ public class DexIO {
 			final BatchedIterator<ClassDef> batchedIterator =
 					new BatchedIterator<>(classIterator, lock, PER_THREAD_BATCH_SIZE);
 			if (i != 0 && !batchedIterator.hasNext()) break;
+			//noinspection Convert2Lambda
 			callables.add(new Callable<Void>() {
 				@Override
 				public Void call() throws IOException {
@@ -148,11 +150,14 @@ public class DexIO {
 				fileClassCount++;
 			}
 			File file;
+			//noinspection SynchronizationOnLocalVariableOrMethodParameter
 			synchronized (lock) {
 				String name = nameIterator.next();
 				file = new File(directory, name);
 				if (logger != null) logger.log(directory, name, fileClassCount);
-				if (classIterator instanceof BatchedIterator) ((BatchedIterator) classIterator).preloadBatch();
+				if (classIterator instanceof BatchedIterator) {
+					((BatchedIterator<?>) classIterator).preloadBatch();
+				}
 			}
 			dexPool.writeTo(new FileDataStore(file));
 			minMainDexClassCount = 0;

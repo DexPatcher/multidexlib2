@@ -30,6 +30,7 @@ public class MultiDexContainerBackedDexFile<T extends DexFile> implements DexFil
 		List<String> entryNames = container.getDexEntryNames();
 		if (entryNames.size() == 1) {
 			String entryName = entryNames.get(0);
+			//noinspection ConstantConditions
 			T entryDex = container.getEntry(entryName).getDexFile();
 			classes = Collections.unmodifiableSet(entryDex.getClasses());
 			opcodes = entryDex.getOpcodes();
@@ -37,6 +38,7 @@ public class MultiDexContainerBackedDexFile<T extends DexFile> implements DexFil
 			LinkedHashSet<ClassDef> accumulatedClasses = new LinkedHashSet<>();
 			Opcodes resolvedOpcodes = null;
 			for (String entryName : entryNames) {
+				//noinspection ConstantConditions
 				T entryDex = container.getEntry(entryName).getDexFile();
 				for (ClassDef entryClass : entryDex.getClasses()) {
 					if (!accumulatedClasses.add(entryClass)) throw new DuplicateTypeException(entryClass.getType());
