@@ -15,8 +15,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.iface.MultiDexContainer;
+import com.android.tools.smali.dexlib2.iface.DexFile;
+import com.android.tools.smali.dexlib2.iface.MultiDexContainer;
 
 public abstract class AbstractMultiDexContainer<T extends DexFile> implements MultiDexContainer<T> {
 

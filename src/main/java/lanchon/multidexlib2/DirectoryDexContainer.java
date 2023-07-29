@@ -15,8 +15,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.jf.dexlib2.Opcodes;
-import org.jf.dexlib2.dexbacked.DexBackedDexFile;
+import com.android.tools.smali.dexlib2.Opcodes;
+import com.android.tools.smali.dexlib2.dexbacked.DexBackedDexFile;
 
 public class DirectoryDexContainer extends AbstractMultiDexContainer<DexBackedDexFile> {
 

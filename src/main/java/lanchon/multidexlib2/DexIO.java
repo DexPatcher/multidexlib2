@@ -26,13 +26,13 @@ import java.util.concurrent.Future;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.PeekingIterator;
-import org.jf.dexlib2.Opcodes;
-import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.writer.DexWriter;
-import org.jf.dexlib2.writer.io.DexDataStore;
-import org.jf.dexlib2.writer.io.FileDataStore;
-import org.jf.dexlib2.writer.pool.DexPool;
+import com.android.tools.smali.dexlib2.Opcodes;
+import com.android.tools.smali.dexlib2.iface.ClassDef;
+import com.android.tools.smali.dexlib2.iface.DexFile;
+import com.android.tools.smali.dexlib2.writer.DexWriter;
+import com.android.tools.smali.dexlib2.writer.io.DexDataStore;
+import com.android.tools.smali.dexlib2.writer.io.FileDataStore;
+import com.android.tools.smali.dexlib2.writer.pool.DexPool;
 
 public class DexIO {
 

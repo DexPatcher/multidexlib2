@@ -10,9 +10,9 @@
 
 package lanchon.multidexlib2;
 
-import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.iface.MultiDexContainer;
-import org.jf.dexlib2.iface.MultiDexContainer.DexEntry;
+import com.android.tools.smali.dexlib2.iface.DexFile;
+import com.android.tools.smali.dexlib2.iface.MultiDexContainer;
+import com.android.tools.smali.dexlib2.iface.MultiDexContainer.DexEntry;
 
 public class BasicDexEntry<C extends MultiDexContainer< /* ? extends */ D>, D extends DexFile>
 		implements DexEntry<D> {

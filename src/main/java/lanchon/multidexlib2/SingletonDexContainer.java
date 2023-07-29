@@ -13,7 +13,7 @@ package lanchon.multidexlib2;
 import java.util.Collections;
 import java.util.Map;
 
-import org.jf.dexlib2.iface.DexFile;
+import com.android.tools.smali.dexlib2.iface.DexFile;
 
 public class SingletonDexContainer<T extends DexFile> extends AbstractMultiDexContainer<T> {
 

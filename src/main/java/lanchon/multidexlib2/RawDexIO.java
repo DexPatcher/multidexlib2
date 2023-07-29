@@ -16,12 +16,12 @@ import java.io.InputStream;
 
 import com.google.common.io.ByteStreamsHack;
 import com.google.common.io.Files;
-import org.jf.dexlib2.Opcodes;
-import org.jf.dexlib2.dexbacked.DexBackedDexFile;
-import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.util.DexUtil;
-import org.jf.dexlib2.writer.io.DexDataStore;
-import org.jf.dexlib2.writer.io.FileDataStore;
+import com.android.tools.smali.dexlib2.Opcodes;
+import com.android.tools.smali.dexlib2.dexbacked.DexBackedDexFile;
+import com.android.tools.smali.dexlib2.iface.DexFile;
+import com.android.tools.smali.dexlib2.util.DexUtil;
+import com.android.tools.smali.dexlib2.writer.io.DexDataStore;
+import com.android.tools.smali.dexlib2.writer.io.FileDataStore;
 
 public class RawDexIO {
 
