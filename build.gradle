@@ -14,7 +14,7 @@ plugins {
     id 'signing'
 }
 
-def dexlib2Version = '2.3.4'
+def dexlib2Version = '3.0.3'
 def multidexlib2VersionSuffix = '.r2'
 
 group = 'com.github.lanchon.dexpatcher'
@@ -23,17 +23,19 @@ version = dexlib2Version + multidexlib2VersionSuffix
 ext.mainArtifact = 'multidexlib2'
 ext.artifactName = mainArtifact
 
-sourceCompatibility = '1.7'
+sourceCompatibility = '1.8'
 def jdk = findProperty('JDK7_HOME') as String ?: '/usr/lib/jvm/java-7-openjdk-amd64'
 def jdk_rt = new File(jdk, 'jre/lib/rt.jar')
 if (jdk_rt.exists()) compileJava.options.bootstrapClasspath = files(jdk_rt)
 
 repositories {
     jcenter()
+    google()
 }
 
 dependencies {
-    api 'org.smali:dexlib2:' + dexlib2Version
+    api 'com.android.tools.smali:smali-dexlib2:' + dexlib2Version
+    api 'com.google.guava:guava:32.0.1-jre'
 }
 
 apply from: 'configure-artifacts.gradle'

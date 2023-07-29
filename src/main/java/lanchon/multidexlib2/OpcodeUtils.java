@@ -10,8 +10,8 @@
 
 package lanchon.multidexlib2;
 
-import org.jf.dexlib2.Opcodes;
-import org.jf.dexlib2.VersionMap;
+import com.android.tools.smali.dexlib2.Opcodes;
+import com.android.tools.smali.dexlib2.VersionMap;
 
 public class OpcodeUtils {
 
